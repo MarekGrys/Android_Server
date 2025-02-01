@@ -52,7 +52,25 @@ namespace Android_Server.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500,$"Wystąpił błąd:{ex.Message}");
+                return StatusCode(500,$"An error occured:{ex.Message}");
+            }
+        }
+
+        [HttpGet("file")]
+        public async Task<IActionResult> SendPDF([FromQuery] string fileName)
+        {
+            try
+            {
+                var pdf = await _service.SendPDF(fileName);
+                return File(pdf.FileContent, "application/pdf", pdf.FileName);
+            }
+            catch(FileNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, $"An error occured: {ex.Message}");
             }
         }
     }

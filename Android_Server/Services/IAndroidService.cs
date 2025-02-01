@@ -7,5 +7,6 @@ namespace Android_Server.Services
         Task UploadPhoto(string photo);
         string GenerateDocument();
         List<FileDetail> GetFiles();
+        Task<PdfFileModel> SendPDF(string fileName);
     }
 }

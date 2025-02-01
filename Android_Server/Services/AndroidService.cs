@@ -14,7 +14,7 @@ namespace Android_Server.Services
         {
             if (string.IsNullOrEmpty(photo))
             {
-                throw new ArgumentException("Brak zdjęcia");
+                throw new ArgumentException("No photo");
             }
 
             byte[] bytes;
@@ -31,7 +31,7 @@ namespace Android_Server.Services
             }
             catch
             {
-                throw new ArgumentException("Źle podane dane!");
+                throw new ArgumentException("Incorrect data!");
             }
 
             photoList.Add(bytes);
@@ -41,7 +41,7 @@ namespace Android_Server.Services
         {
             if (photoList.Count == 0)
             {
-                throw new ArgumentException("Brak zdjęć!");
+                throw new ArgumentException("No photos!");
             }
 
 
@@ -70,7 +70,7 @@ namespace Android_Server.Services
                         }
                         catch
                         {
-                            Console.WriteLine("Błąd!!!");
+                            Console.WriteLine("Error!!!");
                         }
                     }
                     photoList.Clear();
@@ -98,6 +98,24 @@ namespace Android_Server.Services
                 .ToList();
 
             return files;
+        }
+
+        public async Task<PdfFileModel> SendPDF(string fileName)
+        {
+            var filePath = Path.Combine(outputFolder, fileName);
+            if (!File.Exists(filePath))
+            {
+                throw new FileNotFoundException($"PDF file {filePath} not found");
+            }
+
+            byte[] fileContent = File.ReadAllBytes(filePath);
+
+            return new PdfFileModel
+            {
+                FileName = fileName,
+                FileContent = fileContent
+            };
+
         }
     }
 }
