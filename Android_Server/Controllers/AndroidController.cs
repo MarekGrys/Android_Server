@@ -41,5 +41,19 @@ namespace Android_Server.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet("files")]
+        public IActionResult GetFiles()
+        {
+            try
+            {
+                var files = _service.GetFiles();
+                return Ok(files);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500,$"Wystąpił błąd:{ex.Message}");
+            }
+        }
     }
 }

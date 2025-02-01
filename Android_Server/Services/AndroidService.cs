@@ -1,5 +1,6 @@
 ﻿//using System.Reflection.Metadata;
 using System.Xml.Linq;
+using Android_Server.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 
@@ -8,7 +9,7 @@ namespace Android_Server.Services
     public class AndroidService : IAndroidService
     {
         private static readonly List<byte[]> photoList = new List<byte[]>();
-
+        private readonly string outputFolder = @"G:\Nowy folder\AndroidPDFy";
         public async Task UploadPhoto(string photo)
         {
             if (string.IsNullOrEmpty(photo))
@@ -44,9 +45,9 @@ namespace Android_Server.Services
             }
 
 
-            var outputFolder = @"G:\Nowy folder\AndroidPDFy";
+            
             Directory.CreateDirectory(outputFolder);
-            var outputPath = Path.Combine(outputFolder, "test.pdf");
+            var outputPath = Path.Combine(outputFolder, "test1.pdf");
 
             using (FileStream stream = new FileStream(outputPath, FileMode.Create))
             {
@@ -78,6 +79,25 @@ namespace Android_Server.Services
             }
             return outputPath;
 
+        }
+
+        public List<FileDetail> GetFiles()
+        {
+            if (!Directory.Exists(outputFolder))
+            {
+                throw new DirectoryNotFoundException($"{outputFolder} does not exist.");
+            }
+
+            var files = Directory.GetFiles(outputFolder)
+                .Select(filePath => new FileDetail
+                {
+                    FileName = Path.GetFileName(filePath),
+                    FullPath = filePath,
+                    CreatedDate = File.GetCreationTime(filePath)
+                })
+                .ToList();
+
+            return files;
         }
     }
 }
