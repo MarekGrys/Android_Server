@@ -37,7 +37,7 @@ namespace Android_Server.Services
             photoList.Add(bytes);
         }
 
-        public string GenerateDocument()
+        public string GenerateDocument(string name)
         {
             if (photoList.Count == 0)
             {
@@ -47,7 +47,7 @@ namespace Android_Server.Services
 
             
             Directory.CreateDirectory(outputFolder);
-            var outputPath = Path.Combine(outputFolder, "test1.pdf");
+            var outputPath = Path.Combine(outputFolder, $"{name}.pdf");
 
             using (FileStream stream = new FileStream(outputPath, FileMode.Create))
             {

@@ -29,11 +29,11 @@ namespace Android_Server.Controllers
         }
 
         [HttpPost("generate")]
-        public IActionResult GenerateDocument()
+        public IActionResult GenerateDocument([FromQuery] string name)
         {
             try
             {
-                var pdfPath = _service.GenerateDocument();
+                var pdfPath = _service.GenerateDocument(name);
                 return Ok(new { message = "Document created", filePath = pdfPath });
             }
             catch (Exception ex)
