@@ -29,11 +29,11 @@ namespace Android_Server.Controllers
         }
 
         [HttpPost("generate")]
-        public IActionResult GenerateDocument([FromQuery] string name)
+        public async Task<IActionResult> GenerateDocument([FromQuery] string name)
         {
             try
             {
-                var pdfPath = _service.GenerateDocument(name);
+                var pdfPath = await _service.GenerateDocument(name);
                 return Ok(new { message = "Document created", filePath = pdfPath });
             }
             catch (Exception ex)
@@ -71,6 +71,46 @@ namespace Android_Server.Controllers
             catch(Exception ex)
             {
                 return StatusCode(500, $"An error occured: {ex.Message}");
+            }
+        }
+
+        [HttpPost("describe")]
+        public async Task<IActionResult> DescribePhoto([FromBody] string base64Photo)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(base64Photo))
+                {
+                    return BadRequest(new { message = "No photo data provided!" });
+                }
+
+                string description = await _service.GetPhotoDescription(base64Photo);
+
+                return Ok(new { description });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("describe_multiple")]
+        public async Task<IActionResult> DescribeMultiplePhotos([FromBody] string[] base64Photos)
+        {
+            try
+            {
+                if (!base64Photos.Any())
+                {
+                    return BadRequest(new { message = "No photo data provided!" });
+                }
+
+                string description = await _service.GetMultiplePhotosDescription(base64Photos);
+
+                return Ok(new { description });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
             }
         }
     }
