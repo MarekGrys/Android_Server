@@ -10,5 +10,6 @@ namespace Android_Server.Services
         Task<PdfFileModel> SendPDF(string fileName);
         Task<string> GetPhotoDescription(string bytes, string language);
         Task<string> GetMultiplePhotosDescription(string[] bytes);
+        Task ClearCache();
     }
 }

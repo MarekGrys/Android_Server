@@ -257,5 +257,10 @@ namespace Android_Server.Services
 
             return description ?? "No description found.";
         }
+
+        public async Task ClearCache()
+        {
+            photoList.Clear();
+        }
     }
 }

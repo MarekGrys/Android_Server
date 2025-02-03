@@ -113,5 +113,19 @@ namespace Android_Server.Controllers
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpGet("clear")]
+        public async Task<IActionResult> ClearCache()
+        {
+            try
+            {
+                await _service.ClearCache();
+                return Ok("Cache cleared");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
