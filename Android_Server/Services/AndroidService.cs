@@ -41,7 +41,7 @@ namespace Android_Server.Services
             photoList.Add(bytes);
         }
 
-        public async Task<string> GenerateDocument(string name)
+        public async Task<string> GenerateDocument(string name, string language)
         {
             if (photoList.Count == 0)
             {
@@ -78,7 +78,7 @@ namespace Android_Server.Services
                         string base64Photo = Convert.ToBase64String(photo);
 
                         // Używamy await poza blokiem lock
-                        string apiDescription = await GetPhotoDescription(base64Photo);
+                        string apiDescription = await GetPhotoDescription(base64Photo, language);
 
                         var paragraph = new iTextSharp.text.Paragraph(apiDescription);
                         paragraph.Alignment = Element.ALIGN_CENTER;
@@ -139,11 +139,22 @@ namespace Android_Server.Services
         }
 
         // Klucz API z https://aistudio.google.com/apikey
-        private static readonly string API_KEY = "Youe_API_KEY";
+        private static readonly string API_KEY = "AIzaSyBFLpxjbaEMkof6ltIUv3hK7xQWHjTp40I";
         private static readonly string API_URL = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={API_KEY}";
 
-        public async Task<string> GetPhotoDescription(string base64Photo)
+        public async Task<string> GetPhotoDescription(string base64Photo, string language)
         {
+            string prompt = "";
+
+            if(language == "Polski")
+            {
+                prompt = "Podaj mi krótki opis kto jest na zdjęciu lub co na nim widzisz";
+            }
+            if(language == "English")
+            {
+                prompt = "Give me a short description who is at the image or what you can find on that image";
+            }
+            
             var requestBody = new
             {
                 contents = new object[]
@@ -153,7 +164,7 @@ namespace Android_Server.Services
                         parts = new object[]
                         {
                             // Prompt do Gemini, zależnie co chcemy, żeby powiedział o tym zdjęciu
-                            new { text = "Give me a short description who is at the image or what you can find on that image" },
+                            new { text = prompt },
                             new
                             {
                                 inline_data = new

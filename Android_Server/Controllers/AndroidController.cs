@@ -29,11 +29,11 @@ namespace Android_Server.Controllers
         }
 
         [HttpPost("generate")]
-        public async Task<IActionResult> GenerateDocument([FromQuery] string name)
+        public async Task<IActionResult> GenerateDocument([FromQuery] string name, [FromQuery] string language)
         {
             try
             {
-                var pdfPath = await _service.GenerateDocument(name);
+                var pdfPath = await _service.GenerateDocument(name, language);
                 return Ok(new { message = "Document created", filePath = pdfPath });
             }
             catch (Exception ex)
@@ -75,7 +75,7 @@ namespace Android_Server.Controllers
         }
 
         [HttpPost("describe")]
-        public async Task<IActionResult> DescribePhoto([FromBody] string base64Photo)
+        public async Task<IActionResult> DescribePhoto([FromBody] string base64Photo, [FromQuery] string language)
         {
             try
             {
@@ -84,7 +84,7 @@ namespace Android_Server.Controllers
                     return BadRequest(new { message = "No photo data provided!" });
                 }
 
-                string description = await _service.GetPhotoDescription(base64Photo);
+                string description = await _service.GetPhotoDescription(base64Photo, language);
 
                 return Ok(new { description });
             }
